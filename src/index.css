@@ -118,12 +118,8 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-gray-900 text-white font-sans;
   }
   
   .font-display {

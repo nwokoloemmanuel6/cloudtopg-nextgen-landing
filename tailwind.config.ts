@@ -64,6 +64,11 @@ export default {
         'display': ['Alfa Slab One', 'serif'],
         'sans': ['Inter', 'sans-serif'],
       },
+      colors: {
+        'ctg-red': 'hsl(var(--ctg-red))',
+        'ctg-black': 'hsl(var(--ctg-black))',
+        'ctg-white': 'hsl(var(--ctg-white))',
+      },
       backgroundImage: {
         'hero-gradient': 'var(--gradient-hero)',
         'premium-gradient': 'var(--gradient-premium)',
