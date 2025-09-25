@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, ArrowLeft } from 'lucide-react';
-import cloudTopGLogo from '@/assets/cloudtopg-logo.svg';
+import cloudTopGLogo from '@/assets/cloudtopg-logo-red-black.png';
 
 const ThankYouPage = () => {
   useEffect(() => {
