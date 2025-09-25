@@ -8,7 +8,7 @@ import { ArrowRight, CheckCircle, Globe, Users, Trophy, Instagram, Twitter, Link
 import { toast } from '@/hooks/use-toast';
 
 // Import images
-import cloudTopGLogo from '@/assets/cloudtopg-logo-red-black.png';
+import cloudTopGLogo from '@/assets/cloudtopg-logo.svg';
 import handsOnProjects from '@/assets/hands-on-projects-new.jpg';
 import globalOpportunities from '@/assets/global-opportunities-new.jpg';
 import premiumMentorship from '@/assets/premium-mentorship-new.jpg';
