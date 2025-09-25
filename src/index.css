@@ -8,6 +8,11 @@
 
 @layer base {
   :root {
+    /* Cloud Top G Design Tokens */
+    --ctg-red: 0 100% 50%;
+    --ctg-black: 0 0% 4%;
+    --ctg-white: 0 0% 100%;
+
     /* Brand Colors - Red & Black Premium Palette */
     --background: 0 0% 4%;
     --foreground: 0 0% 98%;
@@ -132,6 +137,57 @@
 }
 
 @layer components {
+  /* Cloud Top G Specific Styles */
+  .hero {
+    background: hsl(var(--ctg-black));
+    color: hsl(var(--ctg-white));
+    padding: 6rem 0;
+  }
+  
+  .section {
+    padding: 4rem 0;
+  }
+  
+  .btn-primary {
+    background: hsl(var(--ctg-red));
+    color: #000;
+    border: none;
+    padding: 0.95rem 1.25rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 0 #222;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 #111;
+  }
+  
+  .card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 1.25rem;
+  }
+  
+  .section-title {
+    letter-spacing: 0.04em;
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+  }
+  
+  .microcopy {
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+  
+  .form-note {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+  }
+  
+  /* Design System Components */  
   .hero-gradient {
     background: var(--gradient-hero);
   }
