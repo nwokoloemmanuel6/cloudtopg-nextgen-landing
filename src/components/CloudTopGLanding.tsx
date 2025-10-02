@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -68,7 +69,7 @@ const CloudTopGLanding = () => {
       body.set('_subject', 'CTG Waitlist Signup');
       body.set('_redirect', `${window.location.origin}/thank-you`);
 
-      const res = await fetch(https://formspree.io/f/mdkwzdzn, {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body,
