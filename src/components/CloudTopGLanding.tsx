@@ -24,8 +24,6 @@ interface FormDataState {
   consent: boolean;
 }
 
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mdkwzdzn';
-
 const CloudTopGLanding = () => {
   const [formData, setFormData] = useState<FormDataState>({
     email: '',
