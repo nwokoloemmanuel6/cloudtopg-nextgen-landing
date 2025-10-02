@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +13,9 @@ import handsOnProjects from '@/assets/hands-on-projects-new.jpg';
 import globalOpportunities from '@/assets/global-opportunities-new.jpg';
 import premiumMentorship from '@/assets/premium-mentorship-new.jpg';
 import learnerTransformation from '@/assets/learner-transformation.jpg';
+import type { CheckedState } from "@radix-ui/react-checkbox";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mdkwzdzn";
 
 interface FormDataState {
   email: string;
@@ -38,58 +40,55 @@ const CloudTopGLanding = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleConsentChange = (checked: boolean | "indeterminate") => {
+  const handleConsentChange = (checked: CheckedState) => {
   setFormData(prev => ({ ...prev, consent: checked === true }));
 };
 
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  if (!formData.consent) {
+    toast({
+      title: "Consent Required",
+      description: "Please agree to receive updates to continue.",
+      variant: "destructive",
+    });
+    return;
+  }
 
-    if (!formData.consent) {
-      toast({
-        title: 'Consent Required',
-        description: 'Please agree to receive updates to continue.',
-        variant: 'destructive',
-      });
-      return;
-    }
+  setIsSubmitting(true);
 
-    setIsSubmitting(true);
+  try {
+    // Build FormData from the form element
+    const fd = new FormData(e.currentTarget);
 
-    try {
-      // Build payload for Formspree
-      const body = new FormData(e.currentTarget);
-      // Ensure values from state are sent (Checkbox is custom, not native)
-      body.set('email', formData.email);
-      body.set('fullName', formData.fullName);
-      body.set('phoneNumber', formData.phoneNumber);
-      body.set('consent', String(formData.consent));
-      // Optional helpers Formspree recognizes:
-      body.set('_subject', 'CTG Waitlist Signup');
-      body.set('_redirect', `${window.location.origin}/thank-you`);
+    // Ensure state values are present and normalized
+    fd.set("email", formData.email);
+    fd.set("fullName", formData.fullName);
+    fd.set("phoneNumber", formData.phoneNumber);
+    fd.set("consent", formData.consent ? "true" : "false");
 
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body,
-      });
+    // Optional Formspree helpers
+    fd.set("_subject", "CTG Waitlist Signup");
+    fd.set("_redirect", `${window.location.origin}/thank-you`);
 
-      if (!res.ok) throw new Error('Submit failed');
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: fd,
+    });
 
-      toast({ title: 'Success 🎉', description: 'You are on the waitlist.' });
-      // Redirect to thank-you page
-      window.location.href = '/thank-you';
-    } catch (err) {
-      toast({
-        title: 'Something went wrong',
-        description: 'Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    if (!res.ok) throw new Error("Submit failed");
+
+    toast({ title: "Success 🎉", description: "You are on the waitlist." });
+    window.location.href = "/thank-you";
+  } catch (err) {
+    toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   const scrollToForm = () => {
     document.getElementById('waitlist-form')?.scrollIntoView({ behavior: 'smooth' });
@@ -145,7 +144,7 @@ const CloudTopGLanding = () => {
               <h3 className="font-display text-2xl font-bold text-gray-900 mb-6 text-center">Join the Waitlist</h3>
 
               <form onSubmit={handleSubmit} className="space-y-6" id="waitlist-form">
-  {/* Honeypot for bots */}
+  {/* Honeypot for bots (Formspree ignores if filled) */}
   <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
 
   <div>
@@ -196,18 +195,17 @@ const CloudTopGLanding = () => {
     />
   </div>
 
-  {/* Consent */}
   <div className="flex items-start space-x-2">
     <Checkbox
       id="consent"
       checked={formData.consent}
-      onCheckedChange={(v) => handleConsentChange(v)}
+      onCheckedChange={handleConsentChange}
       className="mt-1"
     />
     <Label htmlFor="consent" className="text-sm text-gray-600 leading-tight cursor-pointer">
       I agree to receive emails about Cloud Top G admissions, assessments, and program updates. *
     </Label>
-    {/* Mirror consent into a native input so FormData always has it */}
+    {/* Mirror consent into a native field so FormData always has it */}
     <input type="hidden" name="consent" value={formData.consent ? "true" : "false"} />
   </div>
 
@@ -228,77 +226,6 @@ const CloudTopGLanding = () => {
   </p>
 </form>
 
-                <div>
-                  <Label htmlFor="email" className="text-sm font-semibold text-gray-900">
-                    Email Address *
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="mt-2 h-12 text-base border-gray-300 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your email"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="fullName" className="text-sm font-semibold text-gray-900">
-                    Full Name *
-                  </Label>
-                  <Input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    required
-                    className="mt-2 h-12 text-base border-gray-300 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-900">
-                    Phone Number *
-                  </Label>
-                  <Input
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    type="tel"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    required
-                    className="mt-2 h-12 text-base border-gray-300 focus:border-red-500 focus:ring-red-500"
-                    placeholder="+234 XX XXXX XXXX"
-                  />
-                </div>
-
-                <div className="flex items-start space-x-2">
-                  <Checkbox id="consent" checked={formData.consent} onCheckedChange={handleConsentChange} className="mt-1" />
-                  <Label htmlFor="consent" className="text-sm text-gray-600 leading-tight">
-                    I agree to receive emails about Cloud Top G admissions, assessments, and program updates. *
-                  </Label>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="btn-primary w-full h-14 text-lg font-bold bg-red-500 hover:bg-red-600 text-black"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Processing...' : <>
-                    Join Waitlist
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </>}
-                </Button>
-
-                <p className="form-note text-center text-gray-500">
-                  You'll get application dates, assessment prep kits, and early-bird updates.
-                  No spam—<a href="/privacy" className="text-red-500 hover:underline">unsubscribe anytime</a>.
-                </p>
-              </form>
             </CardContent>
           </Card>
         </div>
