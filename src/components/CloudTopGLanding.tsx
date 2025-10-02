@@ -37,9 +37,10 @@ const CloudTopGLanding = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleConsentChange = (checked: boolean) => {
-    setFormData(prev => ({ ...prev, consent: checked }));
-  };
+  const handleConsentChange = (checked: boolean | "indeterminate") => {
+  setFormData(prev => ({ ...prev, consent: checked === true }));
+};
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,7 +68,7 @@ const CloudTopGLanding = () => {
       body.set('_subject', 'CTG Waitlist Signup');
       body.set('_redirect', `${window.location.origin}/thank-you`);
 
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+      const res = await fetch(https://formspree.io/f/mdkwzdzn, {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body,
@@ -143,8 +144,88 @@ const CloudTopGLanding = () => {
               <h3 className="font-display text-2xl font-bold text-gray-900 mb-6 text-center">Join the Waitlist</h3>
 
               <form onSubmit={handleSubmit} className="space-y-6" id="waitlist-form">
-                {/* Honeypot for bots (Formspree ignores if filled) */}
-                <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
+  {/* Honeypot for bots */}
+  <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
+
+  <div>
+    <Label htmlFor="email" className="text-sm font-semibold text-gray-900">
+      Email Address *
+    </Label>
+    <Input
+      id="email"
+      name="email"
+      type="email"
+      value={formData.email}
+      onChange={handleInputChange}
+      required
+      className="mt-2 h-12 text-base border-gray-300 focus:border-red-500 focus:ring-red-500"
+      placeholder="Enter your email"
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="fullName" className="text-sm font-semibold text-gray-900">
+      Full Name *
+    </Label>
+    <Input
+      id="fullName"
+      name="fullName"
+      type="text"
+      value={formData.fullName}
+      onChange={handleInputChange}
+      required
+      className="mt-2 h-12 text-base border-gray-300 focus:border-red-500 focus:ring-red-500"
+      placeholder="Enter your full name"
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-900">
+      Phone Number *
+    </Label>
+    <Input
+      id="phoneNumber"
+      name="phoneNumber"
+      type="tel"
+      value={formData.phoneNumber}
+      onChange={handleInputChange}
+      required
+      className="mt-2 h-12 text-base border-gray-300 focus:border-red-500 focus:ring-red-500"
+      placeholder="+234 XX XXXX XXXX"
+    />
+  </div>
+
+  {/* Consent */}
+  <div className="flex items-start space-x-2">
+    <Checkbox
+      id="consent"
+      checked={formData.consent}
+      onCheckedChange={(v) => handleConsentChange(v)}
+      className="mt-1"
+    />
+    <Label htmlFor="consent" className="text-sm text-gray-600 leading-tight cursor-pointer">
+      I agree to receive emails about Cloud Top G admissions, assessments, and program updates. *
+    </Label>
+    {/* Mirror consent into a native input so FormData always has it */}
+    <input type="hidden" name="consent" value={formData.consent ? "true" : "false"} />
+  </div>
+
+  <Button
+    type="submit"
+    className="btn-primary w-full h-14 text-lg font-bold bg-red-500 hover:bg-red-600 text-black"
+    disabled={isSubmitting}
+  >
+    {isSubmitting ? 'Processing...' : <>
+      Join Waitlist
+      <ArrowRight className="ml-2 h-5 w-5" />
+    </>}
+  </Button>
+
+  <p className="form-note text-center text-gray-500">
+    You'll get application dates, assessment prep kits, and early-bird updates.
+    No spam—<a href="/privacy" className="text-red-500 hover:underline">unsubscribe anytime</a>.
+  </p>
+</form>
 
                 <div>
                   <Label htmlFor="email" className="text-sm font-semibold text-gray-900">
